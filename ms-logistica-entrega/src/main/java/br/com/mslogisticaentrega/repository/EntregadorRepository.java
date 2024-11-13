@@ -6,4 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 
 public interface EntregadorRepository extends JpaRepository<Entregador, Long> {
+    boolean existsByCpf(String cpf);
+    boolean existsByTelefone(String telefone);
+
 }

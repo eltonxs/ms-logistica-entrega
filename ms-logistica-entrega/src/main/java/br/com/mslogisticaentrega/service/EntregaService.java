@@ -13,7 +13,6 @@ public class EntregaService {
 
     private final EntregaRepository entregaRepository;
     private final PedidoClient pedidoClient;
-
     public EntregaService(EntregaRepository entregaRepository, PedidoClient pedidoClient) {
         this.entregaRepository = entregaRepository;
         this.pedidoClient = pedidoClient;
@@ -24,7 +23,9 @@ public class EntregaService {
     }
 
     public Entrega criarEntrega(Entrega entrega) {
-        entrega.setStatus(StatusEntrega.PENDENTE);
+        if (entrega.getStatus() == null) {
+            entrega.setStatus(StatusEntrega.PENDENTE);
+        }
         entrega.setDataCriacao(LocalDateTime.now());
         return entregaRepository.save(entrega);
     }
@@ -39,5 +40,18 @@ public class EntregaService {
 
     public List<Entrega> listarEntregas() {
         return entregaRepository.findAll();
+    }
+
+    public void atualizarLocalizacaoEntrega(Long id, Double latitude, Double longitude) {
+        Entrega entrega = entregaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Entrega não encontrada"));
+        entrega.setLatitude(latitude);
+        entrega.setLongitude(longitude);
+        entregaRepository.save(entrega);
+    }
+
+    public Entrega obterEntregaPorId(Long id) {
+        return entregaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Entrega não encontrada"));
     }
 }

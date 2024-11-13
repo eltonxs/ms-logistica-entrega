@@ -6,7 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+
 
 @Entity
 public class Entregador {
@@ -14,25 +14,22 @@ public class Entregador {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @NotBlank(message = "O nome não pode ser nulo ou vazio")
     private String nome;
-
     @NotBlank(message = "O veículo não pode ser nulo ou vazio")
     private String veiculo;
-
     @NotBlank(message = "O CPF não pode ser nulo ou vazio")
     @Pattern(regexp = "\\d{11}", message = "O CPF deve conter exatamente 11 dígitos")
+    @Column(unique = true)
     private String cpf;
-
     @NotBlank(message = "O telefone não pode ser nulo ou vazio")
     @Pattern(
             regexp = "\\(\\d{2}\\)\\d{8,9}",
             message = "O telefone deve estar no formato (11)980713480"
     )
+    @Column(unique = true)
     private String telefone;
 
-    // Getters e Setters
     public Long getId() {
         return id;
     }

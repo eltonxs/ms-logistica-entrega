@@ -1,32 +1,30 @@
 package br.com.mslogisticaentrega.controller;
 
 import br.com.mslogisticaentrega.model.Entregador;
-import br.com.mslogisticaentrega.repository.EntregadorRepository;
+import br.com.mslogisticaentrega.service.EntregadorService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-
 
 @RestController
 @RequestMapping("/entregadores")
 public class EntregadorController {
 
-    private final EntregadorRepository entregadorRepository;
+    private final EntregadorService entregadorService;
 
-    public EntregadorController(EntregadorRepository entregadorRepository) {
-        this.entregadorRepository = entregadorRepository;
+    public EntregadorController(EntregadorService entregadorService) {
+        this.entregadorService = entregadorService;
     }
 
     @PostMapping
     public ResponseEntity<Entregador> criarEntregador(@Valid @RequestBody Entregador entregador) {
-        Entregador novoEntregador = entregadorRepository.save(entregador);
+        Entregador novoEntregador = entregadorService.criarEntregador(entregador);
         return ResponseEntity.status(201).body(novoEntregador);
     }
 
@@ -35,31 +33,23 @@ public class EntregadorController {
             @PathVariable Long id,
             @Valid @RequestBody Entregador entregador) {
 
-        return entregadorRepository.findById(id)
-                .map(entregadorExistente -> {
-                    entregadorExistente.setNome(entregador.getNome());
-                    entregadorExistente.setVeiculo(entregador.getVeiculo());
-                    entregadorExistente.setCpf(entregador.getCpf());
-                    entregadorExistente.setTelefone(entregador.getTelefone());
-                    entregadorRepository.save(entregadorExistente);
-                    return ResponseEntity.ok(entregadorExistente);
-                })
+        return entregadorService.atualizarEntregador(id, entregador)
+                .map(entregadorAtualizado -> ResponseEntity.ok(entregadorAtualizado))
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping
     public ResponseEntity<List<Entregador>> listarEntregadores() {
-        List<Entregador> entregadores = entregadorRepository.findAll();
+        List<Entregador> entregadores = entregadorService.listarEntregadores();
         return ResponseEntity.ok(entregadores);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
-        if (entregadorRepository.existsById(id)) {
-            entregadorRepository.deleteById(id);
-            return ResponseEntity.noContent().build(); // Retorna 204 No Content
+        if (entregadorService.deletarEntregador(id)) {
+            return ResponseEntity.noContent().build();
         } else {
-            return ResponseEntity.notFound().build(); // Retorna 404 Not Found
+            return ResponseEntity.notFound().build();
         }
     }
 
@@ -74,4 +64,3 @@ public class EntregadorController {
         return ResponseEntity.badRequest().body(errors);
     }
 }
-
