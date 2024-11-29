@@ -1,4 +1,4 @@
-package br.com.mslogisticaentrega.model;
+package br.com.mslogisticaentrega.domain;
 
 public enum StatusEntrega {
     PENDENTE,

@@ -1,18 +1,21 @@
-package br.com.mslogisticaentrega.service;
+package br.com.mslogisticaentrega.integration.service;
 
+import br.com.mslogisticaentrega.domain.Entrega;
+import br.com.mslogisticaentrega.domain.StatusEntrega;
+import br.com.mslogisticaentrega.domain.repository.EntregaRepository;
 import br.com.mslogisticaentrega.infra.PedidoClient;
-import br.com.mslogisticaentrega.model.Entrega;
-import br.com.mslogisticaentrega.model.StatusEntrega;
-import br.com.mslogisticaentrega.repository.EntregaRepository;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EntregaService {
 
     private final EntregaRepository entregaRepository;
     private final PedidoClient pedidoClient;
+
     public EntregaService(EntregaRepository entregaRepository, PedidoClient pedidoClient) {
         this.entregaRepository = entregaRepository;
         this.pedidoClient = pedidoClient;
@@ -28,6 +31,10 @@ public class EntregaService {
         }
         entrega.setDataCriacao(LocalDateTime.now());
         return entregaRepository.save(entrega);
+    }
+
+    public Optional<Entrega> buscarPorId(Long id) {
+        return entregaRepository.findById(id);
     }
 
     public Entrega atualizarStatus(Long id, StatusEntrega novoStatus) {

@@ -1,16 +1,12 @@
 package br.com.mslogisticaentrega.controller;
 
-import br.com.mslogisticaentrega.model.Entregador;
-import br.com.mslogisticaentrega.service.EntregadorService;
-import jakarta.validation.Valid;
+import br.com.mslogisticaentrega.integration.service.EntregadorService;
+import br.com.mslogisticaentrega.domain.Entregador;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/entregadores")
@@ -23,19 +19,21 @@ public class EntregadorController {
     }
 
     @PostMapping
-    public ResponseEntity<Entregador> criarEntregador(@Valid @RequestBody Entregador entregador) {
+    public ResponseEntity<Entregador> criarEntregador(@RequestBody Entregador entregador) {
         Entregador novoEntregador = entregadorService.criarEntregador(entregador);
         return ResponseEntity.status(201).body(novoEntregador);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> atualizarEntregador(
-            @PathVariable Long id,
-            @Valid @RequestBody Entregador entregador) {
+    @GetMapping("/{id}")
+    public ResponseEntity<Entregador> buscarEntregadorPorId(@PathVariable Long id) {
+        Optional<Entregador> entregador = entregadorService.buscarPorId(id);
+        return entregador.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
 
-        return entregadorService.atualizarEntregador(id, entregador)
-                .map(entregadorAtualizado -> ResponseEntity.ok(entregadorAtualizado))
-                .orElse(ResponseEntity.notFound().build());
+     @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarEntregador(@PathVariable Long id) {
+        entregadorService.deletarEntregador(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping
@@ -44,23 +42,11 @@ public class EntregadorController {
         return ResponseEntity.ok(entregadores);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
-        if (entregadorService.deletarEntregador(id)) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return ResponseEntity.badRequest().body(errors);
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> atualizarEntregador(
+            @PathVariable Long id,
+            @RequestBody Entregador entregadorAtualizado) {
+        entregadorService.atualizarEntregador(id, entregadorAtualizado);
+        return ResponseEntity.noContent().build();
     }
 }

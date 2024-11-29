@@ -1,8 +1,8 @@
-package br.com.mslogisticaentrega.service;
+package br.com.mslogisticaentrega.integration.service;
 
+import br.com.mslogisticaentrega.domain.Entregador;
+import br.com.mslogisticaentrega.domain.repository.EntregadorRepository;
 import br.com.mslogisticaentrega.exception.DuplicidadeException;
-import br.com.mslogisticaentrega.model.Entregador;
-import br.com.mslogisticaentrega.repository.EntregadorRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +27,10 @@ public class EntregadorService {
         }
 
         return entregadorRepository.save(entregador);
+    }
+
+    public Optional<Entregador> buscarPorId(Long id) {
+        return entregadorRepository.findById(id);
     }
 
     public Optional<Entregador> atualizarEntregador(Long id, Entregador entregador) {

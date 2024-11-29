@@ -1,4 +1,4 @@
-package br.com.mslogisticaentrega.model;
+package br.com.mslogisticaentrega.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
