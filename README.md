@@ -1,27 +1,39 @@
-# Projeto ms-logistica-entrega
+# Microserviço de Logística de Entregas
 
-Microserviço de Logística e Entrega para gerenciar entregadores, pedidos e status de entregas.
+Este é um microserviço desenvolvido para gerenciar a logística de entregas, incluindo cadastro de entregadores, controle de status de entregas e monitoramento de localizações.
 
-## Tecnologias Utilizadas
-- Java 17
-- Spring Boot 3.3.4
-- Spring Data JPA
-- MySQL
-- OpenFeign para comunicação entre microserviços
-- Docker (opcional)
-- Maven
-- Swagger UI (documentação da API)
+## 1. Introdução
 
-## Documentação da API com Swagger
-A documentação interativa da API é gerada automaticamente com o Swagger e pode ser acessada após iniciar o projeto.
+O microserviço **ms-logistica-entrega** é responsável por:
+- Cadastro e gerenciamento de entregadores.
+- Controle de status e atualizações de entregas.
+- Integração de rastreamento por latitude e longitude.
 
-- **Swagger UI**: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
-- **Documentação OpenAPI (JSON)**: [http://localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)
+O projeto é construído com **Java (Spring Boot)** e utiliza **Maven** como gerenciador de dependências.
 
-## Procedimentos para Rodar o Projeto
-1. Instale o MySQL e configure o banco de dados `logistica_entrega`.
-2. Configure o arquivo `application.properties` em `src/main/resources` com as credenciais do banco.
-3. Use o Maven para compilar e rodar o projeto:
-   ```bash
-   mvn clean install
-   mvn spring-boot:run
+---
+
+## 2. Pré-requisitos
+
+Certifique-se de que os seguintes itens estão instalados:
+
+- **Java 17+** ([Baixar](https://www.oracle.com/java/technologies/javase-downloads.html))
+- **Maven 3.8+** ([Baixar](https://maven.apache.org/download.cgi))
+- **Banco de dados**:
+   - **H2** para testes
+   - **MySQL** ou outro banco no ambiente de produção.
+
+---
+
+## 3. Configuração do Ambiente
+
+### 3.1 Variáveis de Ambiente
+
+O sistema utiliza variáveis configuradas em arquivos `application.properties` ou `application.yml`. Um exemplo básico para configuração local está abaixo:
+
+```properties
+# Configuração de Banco de Dados
+spring.datasource.url=jdbc:mysql://localhost:3306/ms_logistica_entrega
+spring.datasource.username=seu_usuario
+spring.datasource.password=sua_senha
+spring.jpa.hibernate.ddl-auto=update
